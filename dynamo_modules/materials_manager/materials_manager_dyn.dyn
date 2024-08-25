@@ -1,0 +1,644 @@
+{
+  "Uuid": "c3a44e86-ff67-4dc0-82a9-e7b9acccdf17",
+  "IsCustomNode": false,
+  "Description": null,
+  "Name": "materials_manager_dyn",
+  "ElementResolver": {
+    "ResolutionMap": {
+      "List": {
+        "Key": "List",
+        "Value": "BuiltIn.ds"
+      },
+      "Dictionary": {
+        "Key": "DesignScript.Builtin.Dictionary",
+        "Value": "DesignScriptBuiltin.dll"
+      }
+    }
+  },
+  "Inputs": [
+    {
+      "Id": "771a0d3bc70d40b7825dbda21d7fe2f2",
+      "Name": "MATERIALS SCHEDULE",
+      "Type": "string",
+      "Type2": "string",
+      "Value": ".\\materials_classification.xlsx",
+      "Description": "Allows you to select a file on the system to get its file path.",
+      "SelectedIndex": 0
+    },
+    {
+      "Id": "c5ec1cb43dd1478c956039820ad29ce1",
+      "Name": "IMPORT MATERIAL DATA",
+      "Type": "boolean",
+      "Type2": "boolean",
+      "Value": "false",
+      "Description": "Selection between a true and false.",
+      "SelectedIndex": 0
+    },
+    {
+      "Id": "552646143c34446e8a328e0b9b3783f7",
+      "Name": "EXPORT MATERIAL DATA",
+      "Type": "boolean",
+      "Type2": "boolean",
+      "Value": "false",
+      "Description": "Selection between a true and false.",
+      "SelectedIndex": 0
+    }
+  ],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.Filename, CoreNodeModels",
+      "HintPath": "C:\\Users\\p.dreier\\OneDrive - 4DEVELOPMENTS SPÓŁKA Z O.O\\Pulpit\\MATERIALS_MANAGER\\materials_classification.xlsx",
+      "InputValue": ".\\materials_classification.xlsx",
+      "NodeType": "ExtensionNode",
+      "Id": "771a0d3bc70d40b7825dbda21d7fe2f2",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "ab4f8fcebc6a46afa41b65febbcb2bd1",
+          "Name": "",
+          "Description": "File Path",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows you to select a file on the system to get its file path."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "NodeType": "BooleanInputNode",
+      "InputValue": false,
+      "Id": "c5ec1cb43dd1478c956039820ad29ce1",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "fd7fddc3c9284cc1b06cd8c0df35159a",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "NodeType": "BooleanInputNode",
+      "InputValue": false,
+      "Id": "552646143c34446e8a328e0b9b3783f7",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "301755b144e24b60b619312e6f50c03b",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "import clr\r\nimport sys\r\nimport os\r\nfrom collections import defaultdict\r\n\r\n# Add CLR references for Revit and Geometry\r\nclr.AddReference('ProtoGeometry')\r\nclr.AddReference(\"RevitAPI\")\r\nclr.AddReference(\"RevitAPIUI\")\r\nclr.AddReference(\"RevitNodes\")\r\nclr.AddReference(\"RevitServices\")\r\nclr.AddReference(\"Microsoft.Office.Interop.Excel\")\r\n\r\n# Import DesignScript libraries for geometry operations\r\nfrom Autodesk.DesignScript.Geometry import *\r\n\r\n# Import Revit DB and UI elements\r\nimport Autodesk.Revit.DB as DB\r\nimport Autodesk.Revit.UI as UI\r\n\r\n# Import Revit services\r\nfrom RevitServices.Persistence import DocumentManager\r\nfrom RevitServices.Transactions import TransactionManager\r\n\r\n# Import Revit and Excel extensions\r\nimport Revit\r\n\r\nclr.ImportExtensions(Revit.Elements)\r\nclr.ImportExtensions(Revit.GeometryConversion)\r\nimport Microsoft.Office.Interop.Excel as Excel\r\n\r\n# Add standard Python library path for IronPython\r\nsys.path.append('C:/Program Files (x86)/IronPython 2.7/Lib')\r\n\r\nimport clr\r\nimport sys\r\n\r\nsys.path.append('C:\\Program Files (x86)\\IronPython 2.7\\Lib')\r\nimport System\r\nfrom System import Array\r\nfrom System.Collections.Generic import *\r\n\r\nclr.AddReference('ProtoGeometry')\r\nfrom Autodesk.DesignScript.Geometry import *\r\n\r\nclr.AddReference(\"RevitNodes\")\r\nimport Revit\r\n\r\nclr.ImportExtensions(Revit.Elements)\r\nclr.ImportExtensions(Revit.GeometryConversion)\r\nclr.AddReference(\"RevitServices\")\r\nimport RevitServices\r\nfrom RevitServices.Persistence import DocumentManager\r\nfrom RevitServices.Transactions import TransactionManager\r\n\r\nclr.AddReference(\"RevitAPI\")\r\nclr.AddReference(\"RevitAPIUI\")\r\n\r\nimport Autodesk\r\nfrom Autodesk.Revit.DB import *\r\n\r\nfrom Autodesk.Revit.UI import *\r\n\r\nimport math\r\n\r\nimport decimal\r\n\r\nfrom System import Object\r\nfrom Microsoft.Office.Interop import Excel\r\n\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nuiapp = DocumentManager.Instance.CurrentUIApplication\r\napp = uiapp.Application\r\nuidoc = uiapp.ActiveUIDocument\r\n\r\nexcel_path_string = IN[0]\r\nimport_data = UnwrapElement(IN[1])\r\nexport_data = UnwrapElement(IN[2])\r\n\r\ntemp = []\r\nfailed_set_parameters_list = []\r\n\r\n\r\n# Class for reading Excel files\r\nclass ReadXLS(object):\r\n    __instance = None\r\n\r\n    def __new__(cls, file_path=None):\r\n        if cls.__instance is None:\r\n            cls.__instance = super(ReadXLS, cls).__new__(cls)\r\n        return cls.__instance\r\n\r\n    def __init__(self, file_path):\r\n        self.file_path = file_path\r\n        self.worksheets_list = self.get_worksheet_names()\r\n\r\n    def get_worksheet_names(self):\r\n        excel = Excel.ApplicationClass()\r\n        workbook = excel.Workbooks.Open(self.file_path)\r\n        worksheet_names = [worksheet.Name for worksheet in workbook.Worksheets]\r\n        workbook.Close(True)\r\n        excel.Quit()\r\n        return worksheet_names\r\n\r\n    def get_worksheet_data(self, worksheet_name=\"SHARED PARAMETERS\"):\r\n        excel = Excel.ApplicationClass()\r\n        workbook = excel.Workbooks.Open(self.file_path)\r\n        worksheet = workbook.Worksheets[worksheet_name]\r\n        worksheet_data = []\r\n        for row in range(1, worksheet.UsedRange.Rows.Count + 1):\r\n            row_data = []\r\n            for col in range(1, worksheet.UsedRange.Columns.Count + 1):\r\n                cell_value = worksheet.Cells[row, col].Value2\r\n                cell_value = \"\" if cell_value is None else cell_value\r\n                row_data.append(cell_value)\r\n            worksheet_data.append(row_data)\r\n        workbook.Close(True)\r\n        excel.Quit()\r\n        return worksheet_data\r\n\r\n\r\n# Class for writing data to Excel file\r\nclass WriteXLS(object):\r\n    def __init__(self, file_path):\r\n        self.file_path = file_path\r\n\r\n    def write_to_excel(self, data, worksheet_name=\"Output\"):\r\n        excel = Excel.ApplicationClass()\r\n        workbook = excel.Workbooks.Open(self.file_path)\r\n        try:\r\n            workbook_name = os.path.splitext(os.path.basename(self.file_path))[0]\r\n            worksheet = workbook.Worksheets[worksheet_name]\r\n        except KeyError:\r\n            workbook.Close()\r\n            excel.Quit()\r\n            return\r\n        for i, row in enumerate(data, 1):\r\n            for j, value in enumerate(row, 1):\r\n                worksheet.Cells[i, j].Value = value\r\n        workbook.Save()\r\n        workbook.Close()\r\n        excel.Quit()\r\n\r\n\r\nclass ParameterUtils(object):\r\n\r\n    @classmethod\r\n    def get_sh_parameter_value_by_name(cls, element, parameter_name, empty_value=\"\"):\r\n        try:\r\n            parameter_value = element.LookupParameter(parameter_name)\r\n            parameter_type = parameter_value.StorageType\r\n            if parameter_type == StorageType.String:\r\n                parameter_value = parameter_value.AsString()\r\n                if parameter_value == \"\" or parameter_value is \"\":\r\n                    parameter_value = empty_value\r\n            if parameter_type == StorageType.Integer:\r\n                parameter_value = parameter_value.AsInteger()\r\n            if parameter_type == StorageType.Double:\r\n                parameter_value = parameter_value.AsDouble()\r\n            if parameter_type == StorageType.ElementId:\r\n                parameter_value = parameter_value.AsElementId()\r\n            if element.LookupParameter(parameter_name).HasValue is False:\r\n                parameter_value = False\r\n                if parameter_type == StorageType.String:\r\n                    parameter_value = empty_value\r\n        except Exception:\r\n            parameter_value = False\r\n        return parameter_value\r\n\r\n    @classmethod\r\n    def get_sh_parameter_value_by_name_or_empty_value(cls, element, parameter_name, empty_value=\"\"):\r\n        parameter_value = cls.get_sh_parameter_value_by_name(element, parameter_name, empty_value)\r\n        parameter_value = empty_value if parameter_value is False else parameter_value\r\n        return parameter_value\r\n\r\n    @classmethod\r\n    def get_parameter_by_parameter_list(cls, element, parameter_list, empty_value=\"\", check_project_info=False):\r\n        parameter_values = []\r\n        for i in parameter_list:\r\n            if type(i) is list:\r\n                sub_parameter_values = []\r\n                for sub_i in i:\r\n                    sub_value = cls.get_sh_parameter_value_by_name(element, sub_i, empty_value)\r\n                    if sub_value is False:\r\n                        if check_project_info:\r\n                            sub_value = cls.get_sh_parameter_value_by_name(doc.ProjectInformation, sub_i,\r\n                                                                           empty_value=\"\")\r\n                    sub_parameter_values.append(sub_value)\r\n                parameter_values.append(sub_parameter_values)\r\n            else:\r\n                parameter_value = cls.get_sh_parameter_value_by_name(element, i, empty_value)\r\n                if parameter_value is False:\r\n                    if check_project_info:\r\n                        parameter_value = cls.get_sh_parameter_value_by_name(doc.ProjectInformation, i, empty_value=\"\")\r\n                parameter_values.append(parameter_value)\r\n        return parameter_values\r\n\r\n    @classmethod\r\n    def set_parameter_by_name(cls, element, parameter_name, value):\r\n        global doc\r\n        try:\r\n            if element.LookupParameter(parameter_name).IsReadOnly is False:\r\n                TransactionManager.Instance.EnsureInTransaction(doc)\r\n                p = element.LookupParameter(parameter_name)\r\n                p.Set(value)\r\n                TransactionManager.Instance.TransactionTaskDone()\r\n                return element\r\n            else:\r\n                return element\r\n        except:\r\n            failed_set_parameters_list.append((element, parameter_name, value))\r\n\r\n    @classmethod\r\n    def set_parameter_by_parameter_list(cls, element, parameter_list, parameter_value_list):\r\n        for i, (parameter_name, parameter_value) in enumerate(zip(parameter_list, parameter_value_list)):\r\n            cls.set_parameter_by_name(element, parameter_name, parameter_value)\r\n        return element\r\n\r\n    @classmethod\r\n    def set_nc_parameter_by_parameter_list(cls, element, parameter_list, parameter_value_list):\r\n        for i, (parameter_name, parameter_value) in enumerate(zip(parameter_list, parameter_value_list)):\r\n            try:\r\n                cls.set_parameter_by_name(element, parameter_name, parameter_value)\r\n            except:\r\n                pass\r\n        return element\r\n\r\n\r\nclass PyMaterial:\r\n    instances = []\r\n\r\n    def __init__(self, element_id):\r\n        self.element_id = element_id\r\n        self.element = doc.GetElement(element_id)\r\n        self.name = self.element.Name\r\n        self.description = self.element.LookupParameter(\"Description\").AsString() if self.element.LookupParameter(\r\n            \"Description\") else None\r\n        self.class_ = self.element.LookupParameter(\"Class\").AsString() if self.element.LookupParameter(\r\n            \"Class\") else None\r\n        self.keywords = self.element.LookupParameter(\"Keywords\").AsString() if self.element.LookupParameter(\r\n            \"Keywords\") else None\r\n        self.model = self.element.LookupParameter(\"Model\").AsString() if self.element.LookupParameter(\"Model\") else None\r\n        self.manufacturer = self.element.LookupParameter(\"Manufacturer\").AsString() if self.element.LookupParameter(\r\n            \"Manufacturer\") else None\r\n        self.comments = self.element.LookupParameter(\"Comments\").AsString() if self.element.LookupParameter(\r\n            \"Comments\") else None\r\n        self.keynote = ParameterUtils.get_sh_parameter_value_by_name(self.element, \"Keynote\")\r\n        self.mark = self.element.LookupParameter(\"Mark\").AsString() if self.element.LookupParameter(\"Mark\") else None\r\n        # Surface patterns and colors\r\n        self.surface_foreground_pattern_id = self.get_name_by_id(self.element.SurfaceForegroundPatternId)\r\n        self.surface_foreground_pattern_color = PyMaterialsUtils.revit_color_to_hex(\r\n            self.element.SurfaceForegroundPatternColor)\r\n        self.surface_background_pattern_id = self.get_name_by_id(self.element.SurfaceBackgroundPatternId)\r\n        self.surface_background_pattern_color = PyMaterialsUtils.revit_color_to_hex(\r\n            self.element.SurfaceBackgroundPatternColor)\r\n        # Cut patterns and colors\r\n        self.cut_foreground_pattern_id = self.get_name_by_id(self.element.CutForegroundPatternId)\r\n        self.cut_foreground_pattern_color = PyMaterialsUtils.revit_color_to_hex(self.element.CutForegroundPatternColor)\r\n        self.cut_background_pattern_id = self.get_name_by_id(self.element.CutBackgroundPatternId)\r\n        self.cut_background_pattern_color = PyMaterialsUtils.revit_color_to_hex(self.element.CutBackgroundPatternColor)\r\n        try:\r\n            self.asset = doc.GetElement(self.element.AppearanceAssetId).Name\r\n        except:\r\n            self.asset = doc.GetElement(self.element.AppearanceAssetId)\r\n        #\r\n        self.instances.append(self)\r\n\r\n    @staticmethod\r\n    def get_name_by_id(id):\r\n        name = None\r\n        try:\r\n            name = doc.GetElement(id).Name\r\n        except:\r\n            name = doc.GetElement(id)\r\n        return name\r\n\r\n    def get_attributes(self):\r\n        # Define a list to store attribute values\r\n        attribute_values = [\r\n            str(self.element_id),\r\n            str(self.name),\r\n            str(self.description),\r\n            str(self.class_),\r\n            str(self.keywords),\r\n            str(self.model),\r\n            str(self.manufacturer),\r\n            str(self.comments),\r\n            str(self.keynote),\r\n            str(self.mark),\r\n            str(self.surface_foreground_pattern_id),\r\n            str(self.surface_foreground_pattern_color),\r\n            str(self.surface_background_pattern_id),\r\n            str(self.surface_background_pattern_color),\r\n            str(self.cut_foreground_pattern_id),\r\n            str(self.cut_foreground_pattern_color),\r\n            str(self.cut_background_pattern_id),\r\n            str(self.cut_background_pattern_color),\r\n            str(self.asset)\r\n        ]\r\n        return attribute_values\r\n\r\n    def set_name(self, new_name):\r\n        self.name = new_name\r\n        self.element.Name = new_name\r\n\r\n    def set_description(self, new_description):\r\n        self.description = new_description\r\n        self.element.LookupParameter(\"Description\").Set(new_description)\r\n\r\n    def set_class(self, new_class):\r\n        try:\r\n            self.class_ = new_class\r\n            self.element.LookupParameter(\"Class\").Set(new_class)\r\n        except:\r\n            pass\r\n\r\n    def set_keywords(self, new_keywords):\r\n        try:\r\n            self.keywords = new_keywords\r\n            self.element.LookupParameter(\"Keywords\").Set(new_keywords)\r\n        except:\r\n            pass\r\n\r\n    def set_model(self, new_model):\r\n        self.model = new_model\r\n        self.element.LookupParameter(\"Model\").Set(new_model)\r\n\r\n    def set_manufacturer(self, new_manufacturer):\r\n        self.manufacturer = new_manufacturer\r\n        self.element.LookupParameter(\"Manufacturer\").Set(new_manufacturer)\r\n\r\n    def set_comments(self, new_comments):\r\n        self.comments = new_comments\r\n        self.element.LookupParameter(\"Comments\").Set(new_comments)\r\n\r\n    def set_keynote(self, new_keynote):\r\n        self.keynote = new_keynote\r\n        ParameterUtils.set_parameter_by_name(self.element, \"Keynote\", new_keynote)\r\n\r\n    def set_mark(self, new_mark):\r\n        self.mark = new_mark\r\n        self.element.LookupParameter(\"Mark\").Set(new_mark)\r\n\r\n\r\nclass PyMaterialsUtils():\r\n\r\n    @staticmethod\r\n    def create_dictionary(keys_list, values_list):\r\n        # Check if the length of keys_list and values_list are the same\r\n        if len(keys_list) != len(values_list):\r\n            raise ValueError(\"Length of keys_list and values_list must be the same\")\r\n\r\n        # Create an empty dictionary\r\n        result_dict = {}\r\n\r\n        # Iterate through the keys_list and values_list to populate the dictionary\r\n        for key, value in zip(keys_list, values_list):\r\n            result_dict[key] = value\r\n\r\n        return result_dict\r\n\r\n    @staticmethod\r\n    def collect_all_ako_materials(include_in_list_if_name_contains=\"\"):\r\n        collector = FilteredElementCollector(doc).OfClass(Material).ToElements()\r\n        materials = [mat for mat in collector if include_in_list_if_name_contains in mat.Name]\r\n        return materials\r\n\r\n    @classmethod\r\n    def ako_materials_names_dict(cls):\r\n        ako_materials = cls.collect_all_ako_materials()\r\n        ako_materials_names = [mat.Name for mat in ako_materials]\r\n        ako_materials_ids = [mat.Id for mat in ako_materials]\r\n        output_dict = cls.create_dictionary(ako_materials_names, ako_materials_ids)\r\n        return output_dict\r\n\r\n    @classmethod\r\n    def ako_materials_ids_dict(cls):\r\n        ako_materials = cls.collect_all_ako_materials()\r\n        ako_materials_names = [mat.Name for mat in ako_materials]\r\n        ako_materials_ids = [mat.Id for mat in ako_materials]\r\n        output_dict = cls.create_dictionary(ako_materials_ids, ako_materials)\r\n        return output_dict\r\n\r\n    @staticmethod\r\n    def collect_all_material_assets():\r\n        collector = FilteredElementCollector(doc).OfClass(Material).ToElements()\r\n        material_assets = [mat.AppearanceAssetId for mat in collector if mat.AppearanceAssetId is not None]\r\n        output = []\r\n        for mat_asset in material_assets:\r\n            try:\r\n                mat_asset = doc.GetElement(mat_asset)\r\n                mat_name = mat_asset.Name\r\n                output.append(mat_asset)\r\n            except:\r\n                pass\r\n\r\n        return output\r\n\r\n    @classmethod\r\n    def all_materials_assets_dict(cls):\r\n        materials_assets = cls.collect_all_material_assets()\r\n        materials_assets_names = [mat.Name for mat in materials_assets]\r\n        materials_assets_ids = [mat.Id for mat in materials_assets]\r\n        output_dict = cls.create_dictionary(materials_assets_names, materials_assets_ids)\r\n        return output_dict\r\n\r\n    @staticmethod\r\n    def collect_all_model_patterns():\r\n        collector = FilteredElementCollector(doc).OfClass(FillPatternElement).ToElements()\r\n        model_patterns = [pattern for pattern in collector if isinstance(pattern.GetFillPattern(), FillPattern)]\r\n        output = []\r\n        for pattern in model_patterns:\r\n            try:\r\n                pattern_name = pattern\r\n                output.append(pattern_name)\r\n            except:\r\n                pass\r\n\r\n        return output\r\n\r\n    @classmethod\r\n    def all_model_patterns_names_dict(cls):\r\n        all_model_patterns = cls.collect_all_model_patterns()\r\n        all_model_patterns_names = [mat.Name for mat in all_model_patterns]\r\n        all_model_patterns_ids = [mat.Id for mat in all_model_patterns]\r\n        output_dict = cls.create_dictionary(all_model_patterns_names, all_model_patterns_ids)\r\n        return output_dict\r\n\r\n    @staticmethod\r\n    def collect_all_detail_patterns():\r\n        collector = FilteredElementCollector(doc).OfClass(FillPatternElement).ToElements()\r\n        detail_patterns = [pattern for pattern in collector if not isinstance(pattern.GetFillPattern(), FillPattern)]\r\n        output = []\r\n        for pattern in detail_patterns:\r\n            try:\r\n                pattern_name = pattern.Name\r\n                output.append(pattern_name)\r\n            except:\r\n                pass\r\n\r\n        return output\r\n\r\n    @staticmethod\r\n    def revit_color_to_hex(revit_color):\r\n        # Extract RGB values from the Revit color parameter\r\n        red = int(revit_color.Red)\r\n        green = int(revit_color.Green)\r\n        blue = int(revit_color.Blue)\r\n\r\n        # Convert RGB values to hexadecimal format\r\n        hex_color = \"#{:02X}{:02X}{:02X}\".format(red, green, blue)\r\n\r\n        return hex_color\r\n\r\n    @staticmethod\r\n    def hex_to_revit_color(hex_color):\r\n\r\n        # Remove '#' if present\r\n        hex_color = hex_color.lstrip('#')\r\n\r\n        # Convert hexadecimal color code to RGB values\r\n        red = int(hex_color[0:2], 16)\r\n        green = int(hex_color[2:4], 16)\r\n        blue = int(hex_color[4:6], 16)\r\n\r\n        # Create a Revit color parameter\r\n        revit_color = Color(red, green, blue)\r\n\r\n        return revit_color\r\n\r\n    @staticmethod\r\n    def materials_headers():\r\n        headers = [[\r\n            \"ELEMENT ID\",\r\n            \"NAME\",\r\n            \"DESCRIPTION\",\r\n            \"CLASSIFICATION\",\r\n            \"KEYWORDS\",\r\n            \"MODEL\",\r\n            \"MANUF.\",\r\n            \"COMMENTS\",\r\n            \"KEYNOTE\",\r\n            \"MARK\",\r\n            \"SURFACE PATTERN FG\",\r\n            \"SURFACE PATTERN FG COLOR\",\r\n            \"SURFACE PATTERN BG\",\r\n            \"SURFACE PATTERN BG COLOR\",\r\n            \"CUT PATTERN FG\",\r\n            \"CUT PATTERN FG COLOR\",\r\n            \"CUT PATTERN BG\",\r\n            \"CUT PATTERN BG COLOR\",\r\n            \"ASSET\"\r\n        ]]\r\n        return headers\r\n\r\n    @classmethod\r\n    def get_materials_dataset_to_xlsx(cls):\r\n\r\n        data_list = cls.materials_headers()\r\n\r\n        for py_material in PyMaterial.instances:\r\n            attributes = py_material.get_attributes()\r\n            data_list.append(attributes)\r\n\r\n        return data_list\r\n\r\n    @classmethod\r\n    def create_new_material(cls, name):\r\n        # Start a transaction\r\n        TransactionManager.Instance.EnsureInTransaction(doc)\r\n\r\n        # Create a new material\r\n        new_material = doc.GetElement(Autodesk.Revit.DB.Material.Create(doc, name))\r\n\r\n        # # Set material properties\r\n        # appearance_asset_id = new_material.AppearanceAssetId\r\n        # appearance_asset = doc.GetElement(appearance_asset_id)\r\n        #\r\n        # if appearance_asset:\r\n        #     asset_prop = appearance_asset.FindByName(AssetPropertyType.Material)\r\n        #     if asset_prop:\r\n        #         asset_prop.SetMaterialColor(color)\r\n        #\r\n        # Commit the transaction\r\n        TransactionManager.Instance.TransactionTaskDone()\r\n\r\n        return new_material\r\n\r\n    @classmethod\r\n    def set_materials_parameters_from_xlsx(cls, xlsx_dataset):\r\n\r\n        failed_lst = []\r\n        materials_dictionary = PyMaterialsUtils.ako_materials_ids_dict()\r\n        patterns_dictionary = PyMaterialsUtils.all_model_patterns_names_dict()\r\n        assets_dictionary = PyMaterialsUtils.all_materials_assets_dict()\r\n        # xlsx_dataset = xlsx_dataset[:5]\r\n        xlsx_dataset = xlsx_dataset\r\n        for row in xlsx_dataset:\r\n            TransactionManager.Instance.EnsureInTransaction(doc)\r\n            for i, cell in enumerate(row):\r\n                # Check if cell header matches and add comments accordingly\r\n                if i == 0:\r\n                    # Comment for \"ELEMENT ID\"\r\n                    try:\r\n                        element = materials_dictionary.get(ElementId(int(cell)), False)\r\n                    except:\r\n                        element = False\r\n                    if element is not False:\r\n                        py_material = PyMaterial(element.Id)\r\n                        temp.append(element)\r\n                    if element is False:\r\n                        # Create new material\r\n                        new_name = row[1]\r\n                        py_material = PyMaterial(cls.create_new_material(new_name).Id)\r\n                elif i == 1:\r\n                    # Comment for \"NAME\"\r\n                    py_material.set_name(cell)\r\n                elif i == 2:\r\n                    # Comment for \"DESCRIPTION\"\r\n                    py_material.set_description(cell)\r\n                elif i == 3:\r\n                    # Comment for \"CLASSIFICATION\"\r\n                    py_material.set_class(cell)\r\n                elif i == 4:\r\n                    # Comment for \"KEYWORDS\"\r\n                    py_material.set_keywords(cell)\r\n                elif i == 5:\r\n                    # Comment for \"MODEL\"\r\n                    py_material.set_model(cell)\r\n                elif i == 6:\r\n                    # Comment for \"MANUF.\"\r\n                    py_material.set_manufacturer(cell)\r\n                elif i == 7:\r\n                    # Comment for \"COMMENTS\"\r\n                    py_material.set_comments(cell)\r\n                elif i == 8:\r\n                    # Comment for \"KEYNOTE\"\r\n                    py_material.set_keynote(cell)\r\n                elif i == 9:\r\n                    # Comment for \"MARK\"\r\n                    py_material.set_mark(cell)\r\n                elif i == 10:\r\n                    # Comment for \"SURFACE PATTERN FG\"\r\n                    pattern_id = patterns_dictionary.get(cell, False)\r\n                    if pattern_id is not False:\r\n                        py_material.element.SurfaceForegroundPatternId = pattern_id\r\n                elif i == 11:\r\n                    # Comment for \"SURFACE PATTERN FG COLOR\"\r\n                    new_color = PyMaterialsUtils.hex_to_revit_color(cell)\r\n                    py_material.element.SurfaceForegroundPatternColor = new_color\r\n                elif i == 12:\r\n                    # Comment for \"SURFACE PATTERN BG\"\r\n                    pattern_id = patterns_dictionary.get(cell, False)\r\n                    if pattern_id is not False:\r\n                        py_material.element.SurfaceBackgroundPatternId = pattern_id\r\n                elif i == 13:\r\n                    # Comment for \"SURFACE PATTERN BG COLOR\"\r\n                    new_color = PyMaterialsUtils.hex_to_revit_color(cell)\r\n                    py_material.element.SurfaceBackgroundPatternColor = new_color\r\n                elif i == 14:\r\n                    # Comment for \"CUT PATTERN FG\"\r\n                    pattern_id = patterns_dictionary.get(cell, False)\r\n                    if pattern_id is not False:\r\n                        py_material.element.CutForegroundPatternId = pattern_id\r\n                elif i == 15:\r\n                    # Comment for \"CUT PATTERN FG COLOR\"\r\n                    new_color = PyMaterialsUtils.hex_to_revit_color(cell)\r\n                    py_material.element.CutForegroundPatternColor = new_color\r\n                elif i == 16:\r\n                    # Comment for \"CUT PATTERN BG\"\r\n                    pattern_id = patterns_dictionary.get(cell, False)\r\n                    if pattern_id is not False:\r\n                        py_material.element.CutBackgroundPatternId = pattern_id\r\n                elif i == 17:\r\n                    # Comment for \"CUT PATTERN BG COLOR\"\r\n                    new_color = PyMaterialsUtils.hex_to_revit_color(cell)\r\n                    py_material.element.CutBackgroundPatternColor = new_color\r\n                elif i == 18:\r\n                    # Comment for \"ASSET\"\r\n                    new_asset_id = assets_dictionary.get(cell, False)\r\n                    if new_asset_id is not False:\r\n                        py_material.element.AppearanceAssetId = new_asset_id\r\n            TransactionManager.Instance.TransactionTaskDone()\r\n        return failed_lst\r\n\r\n\r\ninput_xlsx_dataset = []\r\n# ## Load dataset to Revit ## #\r\nif import_data:\r\n    # Example usage:\r\n    excel_path_string = IN[0]  # Ensure you have an input system in place\r\n    xls_reader = ReadXLS(file_path=excel_path_string)\r\n    worksheet_names = xls_reader.get_worksheet_names()\r\n    worksheet_data = xls_reader.get_worksheet_data(\"DYN\")\r\n    input_xlsx_dataset = worksheet_data[1:]\r\n    #\r\n    PyMaterialsUtils.set_materials_parameters_from_xlsx(input_xlsx_dataset)\r\n\r\n# ## Export dataset to XLSX ## #\r\nxls_dataset_list = PyMaterialsUtils.materials_headers() + input_xlsx_dataset\r\nif export_data:\r\n    PyMaterial.instances = []\r\n    ako_materials_list = PyMaterialsUtils.collect_all_ako_materials()\r\n\r\n    for material in ako_materials_list:\r\n        PyMaterial(material.Id)\r\n\r\n    xls_dataset_list = PyMaterialsUtils.get_materials_dataset_to_xlsx()\r\n    xls_dataset_list = xls_dataset_list[:]\r\n\r\n    # Example usage for writing data\r\n    xls_writer = WriteXLS(file_path=excel_path_string)\r\n    data_to_write = xls_dataset_list\r\n    xls_writer.write_to_excel(data_to_write, worksheet_name=\"DYN\")\r\n\r\nall_materials = PyMaterialsUtils.collect_all_ako_materials()\r\n\r\noutput = []\r\n\r\nfor material in all_materials:\r\n    material_class = ParameterUtils.get_sh_parameter_value_by_name(material, \"Class\")\r\n    material_mark = ParameterUtils.get_sh_parameter_value_by_name(material, \"Mark\")\r\n    keynote = ParameterUtils.get_sh_parameter_value_by_name(material, \"Keynote\")\r\n    # if \"IT\" in material_mark:\r\n    #     ParameterUtils.set_parameter_by_name(material, \"Keynote\", \"03100\")\r\n    #     # ParameterUtils.set_parameter_by_name(material, \"Class\", \"IZOL\")\r\n    #     ParameterUtils.set_parameter_by_name(material, \"Keywords\", \"IZOL\")\r\n    output.append((material_mark, keynote, material_class))\r\n\r\nOUT = input_xlsx_dataset, output\r\n",
+      "Engine": "IronPython2",
+      "EngineName": "IronPython2",
+      "VariableInputPorts": true,
+      "Id": "fec7ba25893f4102bbf08b5df3388070",
+      "Inputs": [
+        {
+          "Id": "86b0cc7a167b4c0eabc44c3441c15646",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "deebd7a303794cfa8716b09cd47949e4",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "fbe2482d853840ad85971d7ad44158f4",
+          "Name": "IN[2]",
+          "Description": "Input #2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "7c22cea20e554a33a89a33687b29870c",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "ab4f8fcebc6a46afa41b65febbcb2bd1",
+      "End": "86b0cc7a167b4c0eabc44c3441c15646",
+      "Id": "29d7a9f9601e498d9524719a5e2cd75c",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "fd7fddc3c9284cc1b06cd8c0df35159a",
+      "End": "deebd7a303794cfa8716b09cd47949e4",
+      "Id": "2448f45f5345476ea6bef81375765cb8",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "301755b144e24b60b619312e6f50c03b",
+      "End": "fbe2482d853840ad85971d7ad44158f4",
+      "Id": "774f0937dc9843af8028254602ce62c8",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "2.12",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "None provided",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.16.2.5624",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Name": "MATERIALS SCHEDULE",
+        "ShowGeometry": true,
+        "Id": "771a0d3bc70d40b7825dbda21d7fe2f2",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -389.94812466901,
+        "Y": 1957.7939010625837
+      },
+      {
+        "Name": "IMPORT MATERIAL DATA",
+        "ShowGeometry": true,
+        "Id": "c5ec1cb43dd1478c956039820ad29ce1",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -389.960650534868,
+        "Y": 2323.3773645367942
+      },
+      {
+        "Name": "EXPORT MATERIAL DATA",
+        "ShowGeometry": true,
+        "Id": "552646143c34446e8a328e0b9b3783f7",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -383.18936799853515,
+        "Y": 2669.9516091495725
+      },
+      {
+        "Name": "Python Script",
+        "ShowGeometry": false,
+        "Id": "fec7ba25893f4102bbf08b5df3388070",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 183.52419536782963,
+        "Y": 2289.7632273946233
+      }
+    ],
+    "Annotations": [
+      {
+        "Id": "310903ce459748f78c4018d771aad5a9",
+        "Title": "PYTHON<DESCRPTION>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "3df54130e73a48ef865c6e7764e3dbb3"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1355.5388565092053,
+        "Top": 367.13651735572807,
+        "Width": 417.56666666666672,
+        "Height": 123.0,
+        "FontSize": 36.0,
+        "InitialTop": 440.46985068906139,
+        "InitialHeight": 144.99999999999994,
+        "TextblockHeight": 63.333333333333336,
+        "Background": "#FF71C6A8"
+      },
+      {
+        "Id": "e731600da0fc4b618aa535694913fb9b",
+        "Title": "SET<DESCRPTION>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "cd258a51b6214d2eae51c59a4de24412"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1797.4261772317627,
+        "Top": 367.13651735572807,
+        "Width": 334.5266666666667,
+        "Height": 123.0,
+        "FontSize": 36.0,
+        "InitialTop": 440.46985068906139,
+        "InitialHeight": 144.99999999999994,
+        "TextblockHeight": 63.333333333333336,
+        "Background": "#FFFF7BAC"
+      },
+      {
+        "Id": "949875c95e23480584a9b476702f6500",
+        "Title": "DESIGN<DESCRPTION>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "a29cb0a37e6147e494c9b92450282429"
+        ],
+        "HasNestedGroups": false,
+        "Left": 932.672365168169,
+        "Top": 367.13651735572853,
+        "Width": 402.11666666666667,
+        "Height": 123.0,
+        "FontSize": 36.0,
+        "InitialTop": 440.46985068906184,
+        "InitialHeight": 144.99999999999994,
+        "TextblockHeight": 63.333333333333336,
+        "Background": "#FFA4E1FF"
+      },
+      {
+        "Id": "1dac58f5b1744c8dac8fac5bc34aa80c",
+        "Title": "IMPORT",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "e21f51ced0d645499b6999df968a21f9"
+        ],
+        "HasNestedGroups": false,
+        "Left": 758.134416665146,
+        "Top": 367.13651735572807,
+        "Width": 147.98666666666668,
+        "Height": 123.0,
+        "FontSize": 36.0,
+        "InitialTop": 440.46985068906139,
+        "InitialHeight": 144.99999999999994,
+        "TextblockHeight": 63.333333333333336,
+        "Background": "#FFD4B6DB"
+      },
+      {
+        "Id": "cbfdc9d6df894a8e9f191df9e5dd20cc",
+        "Title": "INPUTS",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "92aa53ea490b4edba645a0a8340cb874"
+        ],
+        "HasNestedGroups": false,
+        "Left": 596.36299575826581,
+        "Top": 367.13651735572807,
+        "Width": 138.69,
+        "Height": 123.0,
+        "FontSize": 36.0,
+        "InitialTop": 440.46985068906139,
+        "InitialHeight": 144.99999999999994,
+        "TextblockHeight": 63.333333333333336,
+        "Background": "#FFBB87C6"
+      },
+      {
+        "Id": "f47d2c5ca1cb4d4e91a2b4445430380e",
+        "Title": "<AUTHOR>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "9e349100b1b243a4b99d40971e8a51af"
+        ],
+        "HasNestedGroups": false,
+        "Left": 365.7623438009349,
+        "Top": 367.13651735572807,
+        "Width": 209.59666666666669,
+        "Height": 137.0,
+        "FontSize": 36.0,
+        "InitialTop": 440.46985068906139,
+        "InitialHeight": 144.99999999999994,
+        "TextblockHeight": 63.333333333333336,
+        "Background": "#FFFFC999"
+      },
+      {
+        "Id": "a2f3176281594374b3d98f320f77d302",
+        "Title": "MATERIALS SCHEDULE",
+        "DescriptionText": "Select the location of the .xlsx file with the materials list for the given project",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "771a0d3bc70d40b7825dbda21d7fe2f2",
+          "2f51562279d542ef80c190fd7760dd8b"
+        ],
+        "HasNestedGroups": false,
+        "Left": -414.61479133567661,
+        "Top": 1759.7939010625839,
+        "Width": 317.33333333333331,
+        "Height": 339.66666666666629,
+        "FontSize": 36.0,
+        "InitialTop": 1885.1272343959172,
+        "InitialHeight": 217.66666666666629,
+        "TextblockHeight": 115.33333333333334,
+        "Background": "#FFFFB8D8"
+      },
+      {
+        "Id": "1efdd9d8c6c046af93a5246bbca6c59c",
+        "Title": "IMPORT",
+        "DescriptionText": "Select 'true' if the data from the material schedule should be uploaded to the RVT file",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "c5ec1cb43dd1478c956039820ad29ce1",
+          "66365c6bbd824b06a1c27e71f6c70ff2"
+        ],
+        "HasNestedGroups": false,
+        "Left": -415.960650534868,
+        "Top": 2168.7106978701272,
+        "Width": 308.0,
+        "Height": 286.33333333333348,
+        "FontSize": 36.0,
+        "InitialTop": 2250.7106978701272,
+        "InitialHeight": 217.66666666666697,
+        "TextblockHeight": 72.0,
+        "Background": "#FFFFB8D8"
+      },
+      {
+        "Id": "e4a72585f1ac41b7a7675c83d628c598",
+        "Title": "EXPORT",
+        "DescriptionText": "Select 'true' if the data from the Revit project should be exported to the .xlsx schedule",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "552646143c34446e8a328e0b9b3783f7",
+          "7b58361f06594ff39766bff71caaaf57"
+        ],
+        "HasNestedGroups": false,
+        "Left": -415.85603466520183,
+        "Top": 2515.2849424829055,
+        "Width": 320.0,
+        "Height": 286.33333333333348,
+        "FontSize": 36.0,
+        "InitialTop": 2597.2849424829055,
+        "InitialHeight": 217.66666666666697,
+        "TextblockHeight": 72.0,
+        "Background": "#FFFFB8D8"
+      },
+      {
+        "Id": "a29cb0a37e6147e494c9b92450282429",
+        "Title": "DESIGN <DESCRIPTION>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": 942.672365168169,
+        "Top": 448.46985068906184,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "3df54130e73a48ef865c6e7764e3dbb3",
+        "Title": "PYTHON <DESCRIPTION>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": 1365.5388565092053,
+        "Top": 448.46985068906139,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "cd258a51b6214d2eae51c59a4de24412",
+        "Title": "SET <DESCRIPTION>",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": 1807.4261772317627,
+        "Top": 448.46985068906139,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "e21f51ced0d645499b6999df968a21f9",
+        "Title": "IMPORT FILES",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": 768.134416665146,
+        "Top": 448.46985068906139,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "92aa53ea490b4edba645a0a8340cb874",
+        "Title": "INPUTS",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": 606.36299575826581,
+        "Top": 448.46985068906139,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "9e349100b1b243a4b99d40971e8a51af",
+        "Title": "AUTHOR:\r\n©PAWEŁ DREIER",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": 375.7623438009349,
+        "Top": 448.46985068906139,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "2f51562279d542ef80c190fd7760dd8b",
+        "Title": "Select the location of the .xlsx file with the materials list for the given project",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": -404.61479133567661,
+        "Top": 1893.1272343959172,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676",
+        "PinnedNode": "771a0d3bc70d40b7825dbda21d7fe2f2"
+      },
+      {
+        "Id": "66365c6bbd824b06a1c27e71f6c70ff2",
+        "Title": "Select 'true' if the data from the material schedule should be uploaded to the RVT file",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": -405.960650534868,
+        "Top": 2258.7106978701272,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676",
+        "PinnedNode": "c5ec1cb43dd1478c956039820ad29ce1"
+      },
+      {
+        "Id": "7b58361f06594ff39766bff71caaaf57",
+        "Title": "Select 'true' if the data from the Revit project should be exported to the .xlsx schedule",
+        "DescriptionText": null,
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [],
+        "HasNestedGroups": false,
+        "Left": -405.85603466520183,
+        "Top": 2605.2849424829055,
+        "Width": 0.0,
+        "Height": 0.0,
+        "FontSize": 36.0,
+        "InitialTop": 0.0,
+        "InitialHeight": 0.0,
+        "TextblockHeight": 0.0,
+        "Background": "#FFC1D676",
+        "PinnedNode": "552646143c34446e8a328e0b9b3783f7"
+      }
+    ],
+    "X": 1118.8855975808503,
+    "Y": -1473.414489620433,
+    "Zoom": 0.8736917640386932
+  }
+}
